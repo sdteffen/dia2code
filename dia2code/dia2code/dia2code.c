@@ -239,7 +239,9 @@ char *create_package_dir( const batch *batch, umlpackage *pkg )
     char * fulldirname, *dirname;
     int ret;
     /* created directories permissions */
+#ifndef __MINGW32__
     mode_t dir_mask = S_IRUSR | S_IWUSR | S_IXUSR |S_IRGRP | S_IXGRP;
+#endif
     if( pkg == NULL ) {
         return NULL;
     }
@@ -250,9 +252,17 @@ char *create_package_dir( const batch *batch, umlpackage *pkg )
         dirname = strdup(pkg->name);
         dirname = strtok( dirname, "." );
         while( dirname != NULL ) {
+#ifdef __MINGW32__
+            sprintf( fulldirname, "%s\%s", fulldirname, dirname );
+#else
             sprintf( fulldirname, "%s/%s", fulldirname, dirname );
+#endif
             /* TODO : should create only if not existant */
+#ifndef __MINGW32__
             ret = mkdir( fulldirname, dir_mask );
+#else
+            ret = mkdir( fulldirname );
+#endif
             dirname = strtok( NULL, "." );
         }
         /* set the package directory used later for source file creation */
@@ -965,4 +975,26 @@ char *find_diaoid( const char *buf, char **newpos  )
     return oidp;
 }
 
+#ifdef __MINGW32__
+char *
+strndup(const char *s, size_t n)
+{
+    size_t length;
+    char *copy;
+
+    if (s == NULL) {
+        errno = EINVAL;
+        return NULL;
+    }
+    length = strlen(s);
+    if (length > n)
+        length = n;
+    copy = malloc(length + 1);
+    if (copy == NULL)
+        return NULL;
+    memcpy(copy, s, length);
+    copy[length] = '\0';
+    return copy;
+}
+#endif
 
