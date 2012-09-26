@@ -1,7 +1,7 @@
 ; dia2code
 ; Win32 Installer Source Code for NSIS 2.0
 
-; (c) 2001,2007Steffen Macke <sdteffen@gmail.com>
+; (c) 2001, 2007, 2012 Steffen Macke <sdteffen@gmail.com>
 
 ; ***************************************************************************
 ; *                                                                         *
@@ -36,7 +36,8 @@ File README
 File README.win32
 SetOutPath $INSTDIR\bin
 File dia2code\dia2code.exe
-File dia2code\libxml2.dll
+File dia2code\libxml2-2.dll
+File dia2code\zlib1.dll
 
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dia2code" "DisplayName" "dia2code 0.8.5 (remove only)"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dia2code" "UninstallString" '"$INSTDIR\uninstall-dia2code-0.8.5.exe"'
@@ -109,7 +110,8 @@ SectionEnd
 
 Section Uninstall
 Delete $INSTDIR\bin\dia2code.exe
-Delete $INSTDIR\bin\libxml2.dll
+Delete $INSTDIR\bin\libxml2-2.dll
+Delete $INSTDIR\bin\zlib1.dll
 RMDir  $INSTDIR\bin
 Delete $INSTDIR\COPYING
 Delete $INSTDIR\README
